@@ -688,150 +688,168 @@ defmodule ExCcxt do
     end
   end
 
-  def create_orders(exchange, orders, params \\ %{}) do
-    with {:ok, orders} <- call_js_main(:createOrders, [exchange, orders, params]) do
+  def create_orders(credential = %ExCcxt.Credential{}, orders, params \\ %{}) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, orders} <- call_js_main(:createOrders, [exchange, cred, orders, params]) do
       {:ok, orders}
     else
       err_tup -> err_tup
     end
   end
 
-  def create_limit_buy_order(exchange, symbol, amount, price, params \\ %{}) do
-    with {:ok, order} <-
-           call_js_main(:createLimitBuyOrder, [exchange, symbol, amount, price, params]) do
+  def create_limit_buy_order(credential = %ExCcxt.Credential{}, symbol, amount, price, params \\ %{}) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, order} <-
+           call_js_main(:createLimitBuyOrder, [exchange, cred, symbol, amount, price, params]) do
       {:ok, order}
     else
       err_tup -> err_tup
     end
   end
 
-  def create_limit_sell_order(exchange, symbol, amount, price, params \\ %{}) do
-    with {:ok, order} <-
-           call_js_main(:createLimitSellOrder, [exchange, symbol, amount, price, params]) do
+  def create_limit_sell_order(credential = %ExCcxt.Credential{}, symbol, amount, price, params \\ %{}) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, order} <-
+           call_js_main(:createLimitSellOrder, [exchange, cred, symbol, amount, price, params]) do
       {:ok, order}
     else
       err_tup -> err_tup
     end
   end
 
-  def create_market_buy_order(exchange, symbol, amount, params \\ %{}) do
-    with {:ok, order} <- call_js_main(:createMarketBuyOrder, [exchange, symbol, amount, params]) do
+  def create_market_buy_order(credential = %ExCcxt.Credential{}, symbol, amount, params \\ %{}) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, order} <- call_js_main(:createMarketBuyOrder, [exchange, cred, symbol, amount, params]) do
       {:ok, order}
     else
       err_tup -> err_tup
     end
   end
 
-  def create_market_sell_order(exchange, symbol, amount, params \\ %{}) do
-    with {:ok, order} <- call_js_main(:createMarketSellOrder, [exchange, symbol, amount, params]) do
+  def create_market_sell_order(credential = %ExCcxt.Credential{}, symbol, amount, params \\ %{}) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, order} <- call_js_main(:createMarketSellOrder, [exchange, cred, symbol, amount, params]) do
       {:ok, order}
     else
       err_tup -> err_tup
     end
   end
 
-  def cancel_order(exchange, id, symbol, params \\ %{}) do
-    with {:ok, order} <- call_js_main(:cancelOrder, [exchange, id, symbol, params]) do
+  def cancel_order(credential = %ExCcxt.Credential{}, id, symbol, params \\ %{}) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, order} <- call_js_main(:cancelOrder, [exchange, cred, id, symbol, params]) do
       {:ok, order}
     else
       err_tup -> err_tup
     end
   end
 
-  def fetch_order(exchange, id, symbol, params \\ %{}) do
-    with {:ok, order} <- call_js_main(:fetchOrder, [exchange, id, symbol, params]) do
+  def fetch_order(credential = %ExCcxt.Credential{}, id, symbol, params \\ %{}) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, order} <- call_js_main(:fetchOrder, [exchange, cred, id, symbol, params]) do
       {:ok, order}
     else
       err_tup -> err_tup
     end
   end
 
-  def fetch_orders(exchange, symbol \\ nil, since \\ nil, limit \\ nil, params \\ %{}) do
-    with {:ok, orders} <- call_js_main(:fetchOrders, [exchange, symbol, since, limit, params]) do
+  def fetch_orders(credential = %ExCcxt.Credential{}, symbol \\ nil, since \\ nil, limit \\ nil, params \\ %{}) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, orders} <- call_js_main(:fetchOrders, [exchange, cred, symbol, since, limit, params]) do
       {:ok, orders}
     else
       err_tup -> err_tup
     end
   end
 
-  def fetch_open_orders(exchange, symbol \\ nil, since \\ nil, limit \\ nil, params \\ %{}) do
-    with {:ok, orders} <- call_js_main(:fetchOpenOrders, [exchange, symbol, since, limit, params]) do
+  def fetch_open_orders(credential = %ExCcxt.Credential{}, symbol \\ nil, since \\ nil, limit \\ nil, params \\ %{}) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, orders} <- call_js_main(:fetchOpenOrders, [exchange, cred, symbol, since, limit, params]) do
       {:ok, orders}
     else
       err_tup -> err_tup
     end
   end
 
-  def fetch_canceled_orders(exchange, symbol \\ nil, since \\ nil, limit \\ nil, params \\ %{}) do
-    with {:ok, orders} <-
-           call_js_main(:fetchCanceledOrders, [exchange, symbol, since, limit, params]) do
+  def fetch_canceled_orders(credential = %ExCcxt.Credential{}, symbol \\ nil, since \\ nil, limit \\ nil, params \\ %{}) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, orders} <-
+           call_js_main(:fetchCanceledOrders, [exchange, cred, symbol, since, limit, params]) do
       {:ok, orders}
     else
       err_tup -> err_tup
     end
   end
 
-  def fetch_closed_orders(exchange, symbol \\ nil, since \\ nil, limit \\ nil, params \\ %{}) do
-    with {:ok, orders} <-
-           call_js_main(:fetchClosedOrders, [exchange, symbol, since, limit, params]) do
+  def fetch_closed_orders(credential = %ExCcxt.Credential{}, symbol \\ nil, since \\ nil, limit \\ nil, params \\ %{}) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, orders} <-
+           call_js_main(:fetchClosedOrders, [exchange, cred, symbol, since, limit, params]) do
       {:ok, orders}
     else
       err_tup -> err_tup
     end
   end
 
-  def fetch_my_trades(exchange, symbol \\ nil, since \\ nil, limit \\ nil, params \\ %{}) do
-    with {:ok, trades} <- call_js_main(:fetchMyTrades, [exchange, symbol, since, limit, params]) do
+  def fetch_my_trades(credential = %ExCcxt.Credential{}, symbol \\ nil, since \\ nil, limit \\ nil, params \\ %{}) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, trades} <- call_js_main(:fetchMyTrades, [exchange, cred, symbol, since, limit, params]) do
       {:ok, trades}
     else
       err_tup -> err_tup
     end
   end
 
-  def fetch_my_liquidations(exchange, symbol \\ nil, since \\ nil, limit \\ nil, params \\ %{}) do
-    with {:ok, liquidations} <-
-           call_js_main(:fetchMyLiquidations, [exchange, symbol, since, limit, params]) do
+  def fetch_my_liquidations(credential = %ExCcxt.Credential{}, symbol \\ nil, since \\ nil, limit \\ nil, params \\ %{}) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, liquidations} <-
+           call_js_main(:fetchMyLiquidations, [exchange, cred, symbol, since, limit, params]) do
       {:ok, liquidations}
     else
       err_tup -> err_tup
     end
   end
 
-  def fetch_cross_borrow_rate(exchange, code, params \\ %{}) do
-    with {:ok, rate} <- call_js_main(:fetchCrossBorrowRate, [exchange, code, params]) do
+  def fetch_cross_borrow_rate(credential = %ExCcxt.Credential{}, code, params \\ %{}) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, rate} <- call_js_main(:fetchCrossBorrowRate, [exchange, cred, code, params]) do
       {:ok, rate}
     else
       err_tup -> err_tup
     end
   end
 
-  def fetch_cross_borrow_rates(exchange, params \\ %{}) do
-    with {:ok, rates} <- call_js_main(:fetchCrossBorrowRates, [exchange, params]) do
+  def fetch_cross_borrow_rates(credential = %ExCcxt.Credential{}, params \\ %{}) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, rates} <- call_js_main(:fetchCrossBorrowRates, [exchange, cred, params]) do
       {:ok, rates}
     else
       err_tup -> err_tup
     end
   end
 
-  def fetch_isolated_borrow_rate(exchange, symbol, params \\ %{}) do
-    with {:ok, rate} <- call_js_main(:fetchIsolatedBorrowRate, [exchange, symbol, params]) do
+  def fetch_isolated_borrow_rate(credential = %ExCcxt.Credential{}, symbol, params \\ %{}) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, rate} <- call_js_main(:fetchIsolatedBorrowRate, [exchange, cred, symbol, params]) do
       {:ok, rate}
     else
       err_tup -> err_tup
     end
   end
 
-  def fetch_isolated_borrow_rates(exchange, params \\ %{}) do
-    with {:ok, rates} <- call_js_main(:fetchIsolatedBorrowRates, [exchange, params]) do
+  def fetch_isolated_borrow_rates(credential = %ExCcxt.Credential{}, params \\ %{}) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, rates} <- call_js_main(:fetchIsolatedBorrowRates, [exchange, cred, params]) do
       {:ok, rates}
     else
       err_tup -> err_tup
     end
   end
 
-  def create_convert_trade(exchange, id, from_code, to_code, amount, params \\ %{}) do
-    with {:ok, trade} <-
-           call_js_main(:createConvertTrade, [exchange, id, from_code, to_code, amount, params]) do
+  def create_convert_trade(credential = %ExCcxt.Credential{}, id, from_code, to_code, amount, params \\ %{}) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, trade} <-
+           call_js_main(:createConvertTrade, [exchange, cred, id, from_code, to_code, amount, params]) do
       {:ok, trade}
     else
       err_tup -> err_tup

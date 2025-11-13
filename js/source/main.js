@@ -159,98 +159,98 @@ async function fetchBalance(exchange, cred, params = {}) {
   return await _exchange.fetchBalance(params)
 }
 
-async function createOrder(exchange, symbol, type, side, amount, price, params = {}) {
-  const _exchange = new ccxt[exchange]()
+async function createOrder(exchange, cred, symbol, type, side, amount, price, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.createOrder(symbol, type, side, amount, price, params)
 }
 
-async function createOrders(exchange, orders, params = {}) {
-  const _exchange = new ccxt[exchange]()
+async function createOrders(exchange, cred, orders, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.createOrders(orders, params)
 }
 
-async function createLimitBuyOrder(exchange, symbol, amount, price, params = {}) {
-  const _exchange = new ccxt[exchange]()
+async function createLimitBuyOrder(exchange, cred, symbol, amount, price, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.createLimitBuyOrder(symbol, amount, price, params)
 }
 
-async function createLimitSellOrder(exchange, symbol, amount, price, params = {}) {
-  const _exchange = new ccxt[exchange]()
+async function createLimitSellOrder(exchange, cred, symbol, amount, price, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.createLimitSellOrder(symbol, amount, price, params)
 }
 
-async function createMarketBuyOrder(exchange, symbol, amount, params = {}) {
-  const _exchange = new ccxt[exchange]()
+async function createMarketBuyOrder(exchange, cred, symbol, amount, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.createMarketBuyOrder(symbol, amount, params)
 }
 
-async function createMarketSellOrder(exchange, symbol, amount, params = {}) {
-  const _exchange = new ccxt[exchange]()
+async function createMarketSellOrder(exchange, cred, symbol, amount, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.createMarketSellOrder(symbol, amount, params)
 }
 
-async function cancelOrder(exchange, id, symbol, params = {}) {
-  const _exchange = new ccxt[exchange]()
+async function cancelOrder(exchange, cred, id, symbol, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.cancelOrder(id, symbol, params)
 }
 
-async function fetchOrder(exchange, id, symbol, params = {}) {
-  const _exchange = new ccxt[exchange]()
+async function fetchOrder(exchange, cred, id, symbol, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.fetchOrder(id, symbol, params)
 }
 
-async function fetchOrders(exchange, symbol, since, limit, params = {}) {
-  const _exchange = new ccxt[exchange]()
+async function fetchOrders(exchange, cred, symbol, since, limit, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.fetchOrders(symbol, since, limit, params)
 }
 
-async function fetchOpenOrders(exchange, symbol, since, limit, params = {}) {
-  const _exchange = new ccxt[exchange]()
+async function fetchOpenOrders(exchange, cred, symbol, since, limit, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.fetchOpenOrders(symbol, since, limit, params)
 }
 
-async function fetchCanceledOrders(exchange, symbol, since, limit, params = {}) {
-  const _exchange = new ccxt[exchange]()
+async function fetchCanceledOrders(exchange, cred, symbol, since, limit, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.fetchCanceledOrders(symbol, since, limit, params)
 }
 
-async function fetchClosedOrders(exchange, symbol, since, limit, params = {}) {
-  const _exchange = new ccxt[exchange]()
+async function fetchClosedOrders(exchange, cred, symbol, since, limit, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.fetchClosedOrders(symbol, since, limit, params)
 }
 
-async function fetchMyTrades(exchange, symbol, since, limit, params = {}) {
-  const _exchange = new ccxt[exchange]()
+async function fetchMyTrades(exchange, cred, symbol, since, limit, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.fetchMyTrades(symbol, since, limit, params)
 }
 
-async function fetchMyLiquidations(exchange, symbol, since, limit, params = {}) {
-  const _exchange = new ccxt[exchange]()
+async function fetchMyLiquidations(exchange, cred, symbol, since, limit, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.fetchMyLiquidations(symbol, since, limit, params)
 }
 
-async function fetchCrossBorrowRate(exchange, code, params = {}) {
-  const _exchange = new ccxt[exchange]()
+async function fetchCrossBorrowRate(exchange, cred, code, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.fetchCrossBorrowRate(code, params)
 }
 
-async function fetchCrossBorrowRates(exchange, params = {}) {
-  const _exchange = new ccxt[exchange]()
+async function fetchCrossBorrowRates(exchange, cred, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.fetchCrossBorrowRates(params)
 }
 
-async function fetchIsolatedBorrowRate(exchange, symbol, params = {}) {
-  const _exchange = new ccxt[exchange]()
+async function fetchIsolatedBorrowRate(exchange, cred, symbol, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.fetchIsolatedBorrowRate(symbol, params)
 }
 
-async function fetchIsolatedBorrowRates(exchange, params = {}) {
-  const _exchange = new ccxt[exchange]()
+async function fetchIsolatedBorrowRates(exchange, cred, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.fetchIsolatedBorrowRates(params)
 }
 
-async function createConvertTrade(exchange, id, fromCode, toCode, amount, params = {}) {
-  const _exchange = new ccxt[exchange]()
+async function createConvertTrade(exchange, cred, id, fromCode, toCode, amount, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.createConvertTrade(id, fromCode, toCode, amount, params)
 }
 
