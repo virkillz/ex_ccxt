@@ -6,7 +6,41 @@ This is a lovingly maintained fork of the sadly abandoned [ccxtex](https://githu
 
 ExCcxt is your friendly Elixir bridge to the amazing [CCXT library](https://github.com/ccxt/ccxt) - the Swiss Army knife of cryptocurrency exchange APIs. Think of it as a translator that speaks both Elixir and JavaScript, so you don't have to suffer through `npm install` nightmares.
 
-With ExCcxt, you can query market data, fetch tickers, and do all sorts of crypto wizardry across 100+ exchanges including Binance, Coinbase, Kraken, and that one exchange your friend keeps telling you about.
+With ExCcxt, you can query market data, fetch tickers, and do all sorts of crypto wizardry across 130+ exchanges including Binance, Coinbase, Kraken, and that one exchange your friend keeps telling you about.
+
+## Supported Exchanges 🌐
+
+ExCcxt supports **130+ cryptocurrency exchanges** through the CCXT library. Here's the complete list:
+
+| Exchange | Exchange | Exchange | Exchange | Exchange |
+|----------|----------|----------|----------|----------|
+| aax | alpaca | ascendex | bequant | bibox |
+| bigone | binance | binancecoinm | binanceus | binanceusdm |
+| bit2c | bitbank | bitbay | bitbns | bitcoincom |
+| bitfinex | bitfinex2 | bitflyer | bitforex | bitget |
+| bithumb | bitmart | bitmex | bitopro | bitpanda |
+| bitrue | bitso | bitstamp | bitstamp1 | bittrex |
+| bitvavo | bkex | bl3p | blockchaincom | btcalpha |
+| btcbox | btcex | btcmarkets | btctradeua | btcturk |
+| buda | bw | bybit | bytetrade | cex |
+| coinbase | coinbaseprime | coinbasepro | coincheck | coinex |
+| coinfalcon | coinmate | coinone | coinspot | crex24 |
+| cryptocom | currencycom | delta | deribit | digifinex |
+| eqonex | exmo | flowbtc | fmfwio | ftx |
+| ftxus | gate | gateio | gemini | hitbtc |
+| hitbtc3 | hollaex | huobi | huobijp | huobipro |
+| idex | independentreserve | indodax | itbit | kraken |
+| kucoin | kucoinfutures | kuna | latoken | lbank |
+| lbank2 | liquid | luno | lykke | mercado |
+| mexc | mexc3 | ndax | novadax | oceanex |
+| okcoin | okex | okex5 | okx | paymium |
+| phemex | poloniex | probit | qtrade | ripio |
+| stex | therock | tidebit | tidex | timex |
+| tokocrypto | upbit | wavesexchange | wazirx | whitebit |
+| woo | yobit | zaif | zb | zipmex |
+| zonda | | | | |
+
+_All exchanges support public APIs. Private API support depends on the exchange's authentication requirements._
 
 ## Installation 📦
 
@@ -48,7 +82,7 @@ For Public API function, just call right away.
 
 ```elixir
 iex> ExCcxt.exchanges()
-{:ok, ["binance", "coinbase", "kraken", "bitfinex", ...]} # 100+ exchanges!
+{:ok, ["aax", "alpaca", "ascendex", "bequant", "bibox", "bigone", "binance", ...]} # 130+ exchanges!
 ```
 
 ### Fetch a ticker (current price info)
