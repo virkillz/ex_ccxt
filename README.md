@@ -40,7 +40,9 @@ brew install node
 mix deps.get
 ```
 
-## Quick Start 🏃‍♂️
+## How To Call Public API
+
+For Public API function, just call right away.
 
 ### Get a list of all supported exchanges
 
@@ -118,6 +120,94 @@ iex> ExCcxt.fetch_markets("coinbase")
 ]}
 ```
 
+## How to Call Private API.
+
+Authentication :
+
+To call Private API, depends on your Exchange, it might require differen type of authentication. The most common one is API Key and API Secret. To check what type of authentication your exchange requires, you can use `ExCcxt.required_credentials/1`.
+
+Example:
+
+```elixir
+iex> ExCcxt.required_credentials("binance")
+```
+
+This will return
+
+```elixir
+{:ok,
+ %{
+   "apiKey" => true,
+   "login" => false,
+   "password" => false,
+   "privateKey" => false,
+   "secret" => true,
+   "token" => false,
+   "twofa" => false,
+   "uid" => false,
+   "walletAddress" => false
+ }}
+```
+
+This means you need to provide `apiKey` and `secret` to call private API.
+
+From here after obtain your API Key and API Secret, you can create credential data:
+
+```elixir
+{:ok, credential} = ExCcxt.Credential.new(name: "binance", apiKey: "your-api-key", secret: "your-api-secret")
+
+{:ok,
+ %ExCcxt.Credential{
+   walletAddress: nil,
+   uid: nil,
+   twofa: nil,
+   token: nil,
+   secret: "your-api-secret",
+   privateKey: nil,
+   password: nil,
+   login: nil,
+   apiKey: "your-api-key",
+   name: "binance"
+ }}
+
+```
+
+From here, everytime you need to call private API, you can pass the credential data to the function.
+
+Example:
+
+```elixir
+ExCcxt.fetch_balance(credential)
+```
+
+That's it!
+
+Other Private API Examples:
+
+```elixir
+# Fetch account balance
+ExCcxt.fetch_balance(credential)
+
+# Fetch open orders
+ExCcxt.fetch_open_orders(credential)
+
+# Create a limit buy order
+ExCcxt.create_order(credential, "BTC/USDT", "limit", "buy", 0.001, 43250.0)
+
+# Cancel an order
+ExCcxt.cancel_order(credential, "order_id", "BTC/USDT")
+
+# Fetch your trading history
+ExCcxt.fetch_my_trades(credential)
+
+# Fetch all orders (open, closed, canceled)
+ExCcxt.fetch_orders(credential)
+
+# Create market orders
+ExCcxt.create_market_buy_order(credential, "BTC/USDT", 0.001)
+ExCcxt.create_market_sell_order(credential, "BTC/USDT", 0.001)
+```
+
 ## What Works Right Now ✅
 
 We've implemented the full CCXT unified API! Here's what you can do:
@@ -132,41 +222,44 @@ We've implemented the full CCXT unified API! Here's what you can do:
 - 🏦 **Options**: `fetch_option`, `fetch_option_chain`
 - 💱 **Convert**: `fetch_convert_quote`
 
-### Private APIs (Authentication required)
+### Private APIs (Authentication required) 🔐
 
 - 💰 **Account**: `fetch_balance`
-- 🛒 **Orders**: `create_order`, `cancel_order`, `fetch_orders`, `fetch_open_orders`
-- 📋 **Order Types**: `create_limit_buy_order`, `create_market_sell_order`, etc.
-- 💸 **Trading History**: `fetch_my_trades`, `fetch_closed_orders`
-- 🏛️ **Lending**: `fetch_cross_borrow_rate`, `fetch_isolated_borrow_rates`
+- 🛒 **Orders**: `create_order`, `cancel_order`, `fetch_orders`, `fetch_open_orders`, `fetch_closed_orders`, `fetch_canceled_orders`
+- 📋 **Order Types**: `create_limit_buy_order`, `create_limit_sell_order`, `create_market_buy_order`, `create_market_sell_order`
+- 💸 **Trading History**: `fetch_my_trades`, `fetch_my_liquidations`
+- 🏛️ **Lending**: `fetch_cross_borrow_rate`, `fetch_cross_borrow_rates`, `fetch_isolated_borrow_rate`, `fetch_isolated_borrow_rates`
+- 💱 **Convert Trading**: `create_convert_trade`
 
-**⚠️ Important Note**: Private APIs are implemented but **authentication is not yet supported**. This means you can call the functions, but they'll fail without API keys. We're working on it! 🔧
+**✅ Authentication Supported**: All private APIs now support full authentication using the `ExCcxt.Credential` struct. Just pass your API credentials and start trading! 🚀
 
-## Current Status 🚧
+## Current Status 🚀
 
-This is a **work in progress**! Here's where we stand:
+This library is now **production-ready** for most trading use cases! Here's where we stand:
 
 ### ✅ What's Solid
 
-- All 44 unified API functions implemented
-- Full market data access (public APIs)
-- Proper Elixir structs with type safety
+- **All unified API functions implemented** (40+ functions!)
+- **Full authentication support** for private APIs 🔐
+- **Complete market data access** (public APIs)
+- **Full trading functionality** (create, cancel, manage orders)
+- **Proper Elixir structs** with type safety
+- **Account management** (balance, trading history)
+- **Advanced trading features** (lending rates, liquidations, convert trading)
 
 ### 🚧 What's Coming
 
-- **Authentication support** for private APIs (the big one!)
 - Better error handling and retries
 - WebSocket support for real-time data
 - More examples and tutorials
 - Performance optimizations
+- Comprehensive documentation
 
 ### 💡 What's Not Here (Yet)
 
-- Private trading functionality (needs auth first)
 - Real-time streaming (WebSockets)
-- Advanced order types
 - Portfolio management helpers
-- Comprehensive documentation
+- Advanced order types beyond CCXT unified API
 
 ## Contributing 🤝
 
