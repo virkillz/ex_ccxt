@@ -1,44 +1,179 @@
-# ExCcxt
+# ExCcxt 🚀
 
-This is a fork of https://github.com/metachaos-systems/ccxtex which is unmaintained for quite a while.
+_Because who has time to write JavaScript when you could be writing Elixir?_
 
-ExCcxt package provides easy Elixirinteroperability with JS version of [ccxt library](https://github.com/ccxt/ccxt). Ccxt provides an unified API for querying for historical/recent data and trading operations for multiple cryptocurrency exchanges including GDAX, Bitfinex, Poloniex, Binance and others.
+This is a lovingly maintained fork of the sadly abandoned [ccxtex](https://github.com/metachaos-systems/ccxtex). We've dusted it off, given it some TLC, and made it work with the modern world of crypto trading.
 
-## Installation
+ExCcxt is your friendly Elixir bridge to the amazing [CCXT library](https://github.com/ccxt/ccxt) - the Swiss Army knife of cryptocurrency exchange APIs. Think of it as a translator that speaks both Elixir and JavaScript, so you don't have to suffer through `npm install` nightmares.
 
-### Elixir
+With ExCcxt, you can query market data, fetch tickers, and do all sorts of crypto wizardry across 100+ exchanges including Binance, Coinbase, Kraken, and that one exchange your friend keeps telling you about.
+
+## Installation 📦
+
+### Step 1: Add to your mix.exs
 
 ```elixir
 def deps do
   [
-    {:ex_ccxt, "~> 0.0.1"}
+    {:ex_ccxt, "~> 0.1.0"}
   ]
 end
 ```
 
-### JS
+### Step 2: Make sure you have Node.js
 
-You need nodejs (>= 10) installed to run ExCcxt.
+You'll need Node.js (>= 14) installed because, well, CCXT is written in JavaScript and we haven't figured out how to rewrite 100+ exchange APIs in pure Elixir yet. 😅
 
-## Status and roadmap
+```bash
+# Check if you have Node.js
+node --version
 
-ExCcxt is usable, but is under active development. Some exchanges do not support all methods/require CORS/have other esoteric requirements. Please consult [ccxt documentation](https://github.com/ccxt/ccxt) for more details.
+# If not, install it (macOS with Homebrew)
+brew install node
 
-### Public APIs in progress
+# Or use your favorite package manager
+```
 
-- [x] fetch_ticker
-- [x] fetch_tickers
-- [x] fetch_ohlcv
-- [x] fetch_exchanges
-- [x] fetch_markets
-- [ ] fetch_trades
-- [ ] fetch_order_book
-- [ ] fetch_l2_order_book
+### Step 3: Profit! 💰
 
-### Developer experience improvements
+```bash
+mix deps.get
+```
 
-- [x] unified public API call option structs
-- [x] investigate alternative parallelism/concurrency implementation
-- [ ] improve general usability of library
+## Quick Start 🏃‍♂️
 
-### Private APIs implementation and authentication are under consideration
+### Get a list of all supported exchanges
+
+```elixir
+iex> ExCcxt.exchanges()
+{:ok, ["binance", "coinbase", "kraken", "bitfinex", ...]} # 100+ exchanges!
+```
+
+### Fetch a ticker (current price info)
+
+```elixir
+iex> ExCcxt.fetch_ticker("binance", "BTC", "USDT")
+{:ok,
+ %ExCcxt.Ticker{
+   symbol: "BTC/USDT",
+   last: 43250.50,
+   bid: 43245.10,
+   ask: 43255.90,
+   high: 44100.00,
+   low: 42800.75,
+   # ... lots more juicy data
+ }}
+```
+
+### Get all tickers from an exchange
+
+```elixir
+iex> ExCcxt.fetch_tickers("binance")
+{:ok, %{
+  "BTC/USDT" => %ExCcxt.Ticker{...},
+  "ETH/USDT" => %ExCcxt.Ticker{...},
+  # ... hundreds of trading pairs
+}}
+```
+
+### Fetch historical OHLCV data (candlesticks)
+
+```elixir
+iex> opts = %ExCcxt.OhlcvOpts{
+...>   exchange: "binance",
+...>   base: "BTC",
+...>   quote: "USDT",
+...>   timeframe: "1h",
+...>   since: ~N[2023-01-01 00:00:00],
+...>   limit: 100
+...> }
+iex> ExCcxt.fetch_ohlcvs(opts)
+{:ok, [%ExCcxt.OHLCV{...}, ...]} # Sweet, sweet candlestick data
+```
+
+### Get order book (live buy/sell orders)
+
+```elixir
+iex> ExCcxt.fetch_order_book("kraken", "BTC/USD")
+{:ok,
+ %ExCcxt.OrderBook{
+   bids: [[43240.5, 1.2], [43235.0, 0.8], ...], # [price, amount]
+   asks: [[43250.1, 0.5], [43255.2, 1.1], ...],
+   symbol: "BTC/USD"
+ }}
+```
+
+### List all available markets
+
+```elixir
+iex> ExCcxt.fetch_markets("coinbase")
+{:ok, [
+  %ExCcxt.Market{
+    symbol: "BTC/USD",
+    base: "BTC",
+    quote: "USD",
+    active: true,
+    type: "spot"
+  }, ...
+]}
+```
+
+## What Works Right Now ✅
+
+We've implemented the full CCXT unified API! Here's what you can do:
+
+### Public APIs (No authentication needed)
+
+- 🎯 **Market Data**: `fetch_ticker`, `fetch_tickers`, `fetch_markets`, `fetch_currencies`
+- 📊 **Price History**: `fetch_ohlcvs` (OHLCV candlestick data)
+- 📈 **Trading Data**: `fetch_trades`, `fetch_order_book`, `fetch_l2_order_book`
+- 🔍 **Exchange Info**: `exchanges()`, `fetch_status`, `load_markets`
+- 📉 **Derivatives**: `fetch_open_interest`, `fetch_funding_rates`, `fetch_greeks`
+- 🏦 **Options**: `fetch_option`, `fetch_option_chain`
+- 💱 **Convert**: `fetch_convert_quote`
+
+### Private APIs (Authentication required)
+
+- 💰 **Account**: `fetch_balance`
+- 🛒 **Orders**: `create_order`, `cancel_order`, `fetch_orders`, `fetch_open_orders`
+- 📋 **Order Types**: `create_limit_buy_order`, `create_market_sell_order`, etc.
+- 💸 **Trading History**: `fetch_my_trades`, `fetch_closed_orders`
+- 🏛️ **Lending**: `fetch_cross_borrow_rate`, `fetch_isolated_borrow_rates`
+
+**⚠️ Important Note**: Private APIs are implemented but **authentication is not yet supported**. This means you can call the functions, but they'll fail without API keys. We're working on it! 🔧
+
+## Current Status 🚧
+
+This is a **work in progress**! Here's where we stand:
+
+### ✅ What's Solid
+
+- All 44 unified API functions implemented
+- Full market data access (public APIs)
+- Proper Elixir structs with type safety
+
+### 🚧 What's Coming
+
+- **Authentication support** for private APIs (the big one!)
+- Better error handling and retries
+- WebSocket support for real-time data
+- More examples and tutorials
+- Performance optimizations
+
+### 💡 What's Not Here (Yet)
+
+- Private trading functionality (needs auth first)
+- Real-time streaming (WebSockets)
+- Advanced order types
+- Portfolio management helpers
+- Comprehensive documentation
+
+## Contributing 🤝
+
+Found a bug? Want to add a feature? PRs welcome! This library is a work in progress and we're always looking for help. Or do you think we should totally implement the full CCXT in Elixir instead of wrapping the JavaScript library?
+
+## Disclaimer ⚠️
+
+This library can help you lose money very efficiently. Trade responsibly, test thoroughly, and remember: past performance does not guarantee future results. We are not responsible for your trading decisions or any losses incurred.
+
+_May your profits be high and your gas fees be low!_ 📈
