@@ -1,6 +1,6 @@
 defmodule ExCcxt do
   alias ExCcxt.OhlcvOpts
-  alias ExCcxt.{Ticker, OrderBook, Utils, OHLCV, Market}
+  alias ExCcxt.{Ticker, OrderBook, Utils, OHLCV, Market, Currency}
 
   @moduledoc """
   ExCcxt main module
@@ -261,7 +261,7 @@ defmodule ExCcxt do
     %ExCcxt.Market{
       active: true,
       base: "BTC",
-      base_id: "BTC", 
+      base_id: "BTC",
       symbol: "BTC/USDT",
       quote: "USDT",
       quote_id: "USD",
@@ -296,10 +296,68 @@ defmodule ExCcxt do
 
   @doc """
   Fetches all available currencies from an exchange.
+
+  Example:
+
+  ```elixir
+  ExCcxt.fetch_currencies("hitbtc")
+  ```
+
+  Return:
+
+  ```elixir
+  {:ok, %{
+    "BTC" => %ExCcxt.Currency{
+      active: true,
+      code: "BTC",
+      deposit: true,
+      fee: 0.0005,
+      id: "BTC",
+      info: %{
+        "crypto" => true,
+        "delisted" => false,
+        "fullName" => "Bitcoin",
+        "id" => "BTC",
+        "payinConfirmations" => "1",
+        "payinEnabled" => true,
+        "payinPaymentId" => false,
+        "payoutEnabled" => true,
+        "payoutFee" => "0.000500000000",
+        "payoutIsPaymentId" => false,
+        "precisionPayout" => "8",
+        "precisionTransfer" => "8",
+        "transferEnabled" => true
+      },
+      limits: %{"amount" => %{}, "withdraw" => %{}},
+      name: "Bitcoin",
+      payin: true,
+      payout: true,
+      precision: 1.0e-8,
+      transfer: true,
+      type: "crypto",
+      withdraw: true
+    },
+    ...
+  }}
+  ```
+
   """
   @spec fetch_currencies(String.t()) :: {:ok, map()} | {:error, term}
   def fetch_currencies(exchange) do
     with {:ok, currencies} <- call_js_main(:fetchCurrencies, [exchange]) do
+      currencies =
+        currencies
+        |> Enum.map(fn {k, v} ->
+          currency =
+            v
+            |> MapKeys.to_snake_case()
+            |> MapKeys.to_atoms_unsafe!()
+            |> (&struct!(Currency, &1)).()
+
+          {k, currency}
+        end)
+        |> Map.new()
+
       {:ok, currencies}
     else
       err_tup -> err_tup
@@ -309,6 +367,54 @@ defmodule ExCcxt do
   @doc """
   Returns the list of markets as an object indexed by symbol and caches it with the exchange instance.
   Returns cached markets if loaded already, unless the reload = true flag is forced.
+
+  Example:
+
+    ```elixir
+    ExCcxt.load_markets("hitbtc")
+    ```
+
+  Return:
+
+  ```elixir
+  {:ok, %{
+    "D2T/USDT" => %ExCcxt.Market{
+      active: true,
+      base: "D2T",
+      base_id: "D2T",
+      contract: false,
+      fee_currency: "USDT",
+      future: false,
+      id: "D2TUSDT",
+      info: %{
+        "baseCurrency" => "D2T",
+        "feeCurrency" => "USD",
+        "id" => "D2TUSDT",
+        "provideLiquidityRate" => "0.0012",
+        "quantityIncrement" => "1",
+        "quoteCurrency" => "USD",
+        "takeLiquidityRate" => "0.0025",
+        "tickSize" => "0.000001"
+      },
+      limits: %{"amount" => %{"min" => 1}, "cost" => %{"min" => 1.0e-6}, "leverage" => %{}, "price" => %{"min" => 1.0e-6}},
+      maker: 0.0012,
+      margin: false,
+      option: false,
+      percentage: true,
+      precision: %{"amount" => 1, "price" => 1.0e-6},
+      quote: "USDT",
+      quote_id: "USD",
+      spot: true,
+      swap: false,
+      symbol: "D2T/USDT",
+      taker: 0.0025,
+      tier_based: false,
+      type: "spot"
+    },
+    ...
+  }}
+  ```
+
   """
   @spec load_markets(String.t(), boolean()) :: {:ok, map()} | {:error, term}
   def load_markets(exchange, reload \\ false) do
@@ -320,8 +426,22 @@ defmodule ExCcxt do
   end
 
   @doc """
-  Returns information regarding the exchange status from either the info hardcoded 
+  Returns information regarding the exchange status from either the info hardcoded
   in the exchange instance or the API, if available.
+
+  Example:
+  ```
+  iex(7)> ExCcxt.fetch_status("hitbtc")
+  {:ok, %{"status" => "ok"}}
+  iex(8)> ExCcxt.fetch_status("indodax")
+  {:ok, %{"status" => "ok", "updated" => 1763037264132}}
+  iex(9)> ExCcxt.fetch_status("binance")
+  {:ok, %{"info" => %{"msg" => "normal", "status" => "0"}, "status" => "ok"}}
+  iex(10)> ExCcxt.fetch_status("poloniex")
+  {:ok, %{"status" => "ok", "updated" => 1763037295451}}
+  ```
+
+
   """
   @spec fetch_status(String.t(), map()) :: {:ok, map()} | {:error, term}
   def fetch_status(exchange, params \\ %{}) do
@@ -335,7 +455,8 @@ defmodule ExCcxt do
   @doc """
   Fetch L2 (price-aggregated) order book for a particular symbol.
   """
-  @spec fetch_l2_order_book(String.t(), String.t(), integer() | nil, map()) :: {:ok, OrderBook.t()} | {:error, term}
+  @spec fetch_l2_order_book(String.t(), String.t(), integer() | nil, map()) ::
+          {:ok, OrderBook.t()} | {:error, term}
   def fetch_l2_order_book(exchange, symbol, limit \\ nil, params \\ %{}) do
     with {:ok, order_book} <- call_js_main(:fetchL2OrderBook, [exchange, symbol, limit, params]) do
       order_book =
@@ -353,7 +474,8 @@ defmodule ExCcxt do
   @doc """
   Fetch recent trades for a particular trading symbol.
   """
-  @spec fetch_trades(String.t(), String.t(), String.t(), integer() | nil) :: {:ok, list()} | {:error, term}
+  @spec fetch_trades(String.t(), String.t(), String.t(), integer() | nil) ::
+          {:ok, list()} | {:error, term}
   def fetch_trades(exchange, base, quote, since \\ nil) do
     opts = %{
       exchange: exchange,
@@ -505,19 +627,61 @@ defmodule ExCcxt do
     end
   end
 
+  def required_credentials(exchange) do
+    with {:ok, credentials} <- call_js_main(:requiredCredentials, [exchange]) do
+      {:ok, credentials}
+    else
+      err_tup -> err_tup
+    end
+  end
+
+  def fetch_time(exchange) do
+    with {:ok, time} <- call_js_main(:fetchTime, [exchange]) do
+      {:ok, time}
+    else
+      err_tup -> err_tup
+    end
+  end
+
+  def fetch_version(exchange) do
+    with {:ok, version} <- call_js_main(:fetchVersion, [exchange]) do
+      {:ok, version}
+    else
+      err_tup -> err_tup
+    end
+  end
+
+  def fetch_exchange(exchange) do
+    with {:ok, exchange} <- call_js_main(:fetchExchange, [exchange]) do
+      {:ok, exchange}
+    else
+      err_tup -> err_tup
+    end
+  end
+
   # =============== PRIVATE ========================
 
-  def fetch_balance(exchange, params \\ %{}) do
-    with {:ok, balance} <- call_js_main(:fetchBalance, [exchange, params]) do
+  def fetch_balance(credential = %ExCcxt.Credential{}, params \\ %{}) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, balance} <- call_js_main(:fetchBalance, [exchange, cred, params]) do
       {:ok, balance}
     else
       err_tup -> err_tup
     end
   end
 
-  def create_order(exchange, symbol, type, side, amount, price \\ nil, params \\ %{}) do
-    with {:ok, order} <-
-           call_js_main(:createOrder, [exchange, symbol, type, side, amount, price, params]) do
+  def create_order(
+        credential = %ExCcxt.Credential{},
+        symbol,
+        type,
+        side,
+        amount,
+        price \\ nil,
+        params \\ %{}
+      ) do
+    with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
+         {:ok, order} <-
+           call_js_main(:createOrder, [exchange, cred, symbol, type, side, amount, price, params]) do
       {:ok, order}
     else
       err_tup -> err_tup
@@ -675,6 +839,17 @@ defmodule ExCcxt do
   end
 
   # =============== HELPERS ========================
+
+  defp shorten_credential(credential = %ExCcxt.Credential{}) do
+    cred =
+      credential
+      |> Map.from_struct()
+      |> Enum.filter(fn {k, v} -> not is_nil(v) end)
+      |> Map.new()
+      |> Map.delete(:name)
+
+    %{exchange: credential.name, cred: cred}
+  end
 
   defp call_js_main(jsfn, args) do
     NodeJS.call({"exec.js", jsfn}, args)

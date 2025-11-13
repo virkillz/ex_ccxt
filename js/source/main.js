@@ -1,5 +1,12 @@
 const ccxt = require("ccxt")
 
+// -------------- PUBLIC ----------------- //
+
+async function fetchStatus(exchange, params = {}) {
+  const _exchange = new ccxt[exchange]()
+  return await _exchange.fetchStatus(params)
+}
+
 async function fetchTrades({ exchange, base, quote, since }) {
   const symbolString = `${base}/${quote}`
   const sinceUnix = new Date(since).getTime()
@@ -54,18 +61,101 @@ async function loadMarkets(exchange, reload = false) {
   return await _exchange.loadMarkets(reload)
 }
 
-async function fetchStatus(exchange, params = {}) {
-  const _exchange = new ccxt[exchange]()
-  return await _exchange.fetchStatus(params)
-}
-
 async function fetchL2OrderBook(exchange, symbol, limit, params = {}) {
   const _exchange = new ccxt[exchange]()
   return await _exchange.fetchL2OrderBook(symbol, limit, params)
 }
 
-async function fetchBalance(exchange, params = {}) {
+async function fetchOpenInterest(exchange, symbol, params = {}) {
   const _exchange = new ccxt[exchange]()
+  return await _exchange.fetchOpenInterest(symbol, params)
+}
+
+async function fetchVolatilityHistory(exchange, code, params = {}) {
+  const _exchange = new ccxt[exchange]()
+  return await _exchange.fetchVolatilityHistory(code, params)
+}
+
+async function fetchUnderlyingAssets(exchange) {
+  const _exchange = new ccxt[exchange]()
+  return await _exchange.fetchUnderlyingAssets()
+}
+
+async function fetchSettlementHistory(exchange, symbol, since, limit, params = {}) {
+  const _exchange = new ccxt[exchange]()
+  return await _exchange.fetchSettlementHistory(symbol, since, limit, params)
+}
+
+async function fetchLiquidations(exchange, symbol, since, limit, params = {}) {
+  const _exchange = new ccxt[exchange]()
+  return await _exchange.fetchLiquidations(symbol, since, limit, params)
+}
+
+async function fetchGreeks(exchange, symbol, params = {}) {
+  const _exchange = new ccxt[exchange]()
+  return await _exchange.fetchGreeks(symbol, params)
+}
+
+async function fetchAllGreeks(exchange, symbols, params = {}) {
+  const _exchange = new ccxt[exchange]()
+  return await _exchange.fetchAllGreeks(symbols, params)
+}
+
+async function fetchOption(exchange, symbol, params = {}) {
+  const _exchange = new ccxt[exchange]()
+  return await _exchange.fetchOption(symbol, params)
+}
+
+async function fetchOptionChain(exchange, code, params = {}) {
+  const _exchange = new ccxt[exchange]()
+  return await _exchange.fetchOptionChain(code, params)
+}
+
+async function fetchConvertQuote(exchange, fromCode, toCode, amount, params = {}) {
+  const _exchange = new ccxt[exchange]()
+  return await _exchange.fetchConvertQuote(fromCode, toCode, amount, params)
+}
+
+async function fetchFundingRate(exchange, symbol, params = {}) {
+  const _exchange = new ccxt[exchange]()
+  return await _exchange.fetchFundingRate(symbol, params)
+}
+
+async function fetchFundingRates(exchange, symbols, params = {}) {
+  const _exchange = new ccxt[exchange]()
+  return await _exchange.fetchFundingRates(symbols, params)
+}
+
+async function fetchFundingRateHistory(exchange, symbol, since, limit, params = {}) {
+  const _exchange = new ccxt[exchange]()
+  return await _exchange.fetchFundingRateHistory(symbol, since, limit, params)
+}
+
+async function fetchFundingRateInterval(exchange, symbol, params = {}) {
+  const _exchange = new ccxt[exchange]()
+  return await _exchange.fetchFundingRateInterval(symbol, params)
+}
+
+async function fetchFundingRateIntervals(exchange, symbols, params = {}) {
+  const _exchange = new ccxt[exchange]()
+  return await _exchange.fetchFundingRateIntervals(symbols, params)
+}
+
+async function fetchLongShortRatio(exchange, symbol, params = {}) {
+  const _exchange = new ccxt[exchange]()
+  return await _exchange.fetchLongShortRatio(symbol, params)
+}
+
+async function requiredCredentials(exchange) {
+  const _exchange = new ccxt[exchange]()
+  return _exchange.requiredCredentials
+}
+
+
+// -------------- PRIVATE ----------------- //
+
+async function fetchBalance(exchange, cred, params = {}) {
+  const _exchange = new ccxt[exchange](cred)
   return await _exchange.fetchBalance(params)
 }
 
@@ -134,44 +224,9 @@ async function fetchMyTrades(exchange, symbol, since, limit, params = {}) {
   return await _exchange.fetchMyTrades(symbol, since, limit, params)
 }
 
-async function fetchOpenInterest(exchange, symbol, params = {}) {
-  const _exchange = new ccxt[exchange]()
-  return await _exchange.fetchOpenInterest(symbol, params)
-}
-
-async function fetchVolatilityHistory(exchange, code, params = {}) {
-  const _exchange = new ccxt[exchange]()
-  return await _exchange.fetchVolatilityHistory(code, params)
-}
-
-async function fetchUnderlyingAssets(exchange) {
-  const _exchange = new ccxt[exchange]()
-  return await _exchange.fetchUnderlyingAssets()
-}
-
-async function fetchSettlementHistory(exchange, symbol, since, limit, params = {}) {
-  const _exchange = new ccxt[exchange]()
-  return await _exchange.fetchSettlementHistory(symbol, since, limit, params)
-}
-
-async function fetchLiquidations(exchange, symbol, since, limit, params = {}) {
-  const _exchange = new ccxt[exchange]()
-  return await _exchange.fetchLiquidations(symbol, since, limit, params)
-}
-
 async function fetchMyLiquidations(exchange, symbol, since, limit, params = {}) {
   const _exchange = new ccxt[exchange]()
   return await _exchange.fetchMyLiquidations(symbol, since, limit, params)
-}
-
-async function fetchGreeks(exchange, symbol, params = {}) {
-  const _exchange = new ccxt[exchange]()
-  return await _exchange.fetchGreeks(symbol, params)
-}
-
-async function fetchAllGreeks(exchange, symbols, params = {}) {
-  const _exchange = new ccxt[exchange]()
-  return await _exchange.fetchAllGreeks(symbols, params)
 }
 
 async function fetchCrossBorrowRate(exchange, code, params = {}) {
@@ -194,58 +249,15 @@ async function fetchIsolatedBorrowRates(exchange, params = {}) {
   return await _exchange.fetchIsolatedBorrowRates(params)
 }
 
-async function fetchOption(exchange, symbol, params = {}) {
-  const _exchange = new ccxt[exchange]()
-  return await _exchange.fetchOption(symbol, params)
-}
-
-async function fetchOptionChain(exchange, code, params = {}) {
-  const _exchange = new ccxt[exchange]()
-  return await _exchange.fetchOptionChain(code, params)
-}
-
-async function fetchConvertQuote(exchange, fromCode, toCode, amount, params = {}) {
-  const _exchange = new ccxt[exchange]()
-  return await _exchange.fetchConvertQuote(fromCode, toCode, amount, params)
-}
-
 async function createConvertTrade(exchange, id, fromCode, toCode, amount, params = {}) {
   const _exchange = new ccxt[exchange]()
   return await _exchange.createConvertTrade(id, fromCode, toCode, amount, params)
 }
 
-async function fetchFundingRate(exchange, symbol, params = {}) {
-  const _exchange = new ccxt[exchange]()
-  return await _exchange.fetchFundingRate(symbol, params)
-}
-
-async function fetchFundingRates(exchange, symbols, params = {}) {
-  const _exchange = new ccxt[exchange]()
-  return await _exchange.fetchFundingRates(symbols, params)
-}
-
-async function fetchFundingRateHistory(exchange, symbol, since, limit, params = {}) {
-  const _exchange = new ccxt[exchange]()
-  return await _exchange.fetchFundingRateHistory(symbol, since, limit, params)
-}
-
-async function fetchFundingRateInterval(exchange, symbol, params = {}) {
-  const _exchange = new ccxt[exchange]()
-  return await _exchange.fetchFundingRateInterval(symbol, params)
-}
-
-async function fetchFundingRateIntervals(exchange, symbols, params = {}) {
-  const _exchange = new ccxt[exchange]()
-  return await _exchange.fetchFundingRateIntervals(symbols, params)
-}
-
-async function fetchLongShortRatio(exchange, symbol, params = {}) {
-  const _exchange = new ccxt[exchange]()
-  return await _exchange.fetchLongShortRatio(symbol, params)
-}
-
+// -------------- EXPORT ----------------- //
 
 module.exports = {
+  // Public API functions
   fetchTrades,
   exchanges,
   fetchMarketsForExchange,
@@ -259,6 +271,25 @@ module.exports = {
   loadMarkets,
   fetchStatus,
   fetchL2OrderBook,
+  fetchOpenInterest,
+  fetchVolatilityHistory,
+  fetchUnderlyingAssets,
+  fetchSettlementHistory,
+  fetchLiquidations,
+  fetchGreeks,
+  fetchAllGreeks,
+  fetchOption,
+  fetchOptionChain,
+  fetchConvertQuote,
+  fetchFundingRate,
+  fetchFundingRates,
+  fetchFundingRateHistory,
+  fetchFundingRateInterval,
+  fetchFundingRateIntervals,
+  fetchLongShortRatio,
+  requiredCredentials,
+
+  // Private API functions (require authentication)
   fetchBalance,
   createOrder,
   createOrders,
@@ -273,26 +304,10 @@ module.exports = {
   fetchCanceledOrders,
   fetchClosedOrders,
   fetchMyTrades,
-  fetchOpenInterest,
-  fetchVolatilityHistory,
-  fetchUnderlyingAssets,
-  fetchSettlementHistory,
-  fetchLiquidations,
   fetchMyLiquidations,
-  fetchGreeks,
-  fetchAllGreeks,
   fetchCrossBorrowRate,
   fetchCrossBorrowRates,
   fetchIsolatedBorrowRate,
   fetchIsolatedBorrowRates,
-  fetchOption,
-  fetchOptionChain,
-  fetchConvertQuote,
-  createConvertTrade,
-  fetchFundingRate,
-  fetchFundingRates,
-  fetchFundingRateHistory,
-  fetchFundingRateInterval,
-  fetchFundingRateIntervals,
-  fetchLongShortRatio
+  createConvertTrade
 }
