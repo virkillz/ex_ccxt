@@ -9,15 +9,17 @@ defmodule ExCcxt.Helper do
   Note: This module is intended for development use and may not be part of the public API.
   """
   def save({:ok, data}, filename) do
-    path = "priv/example/#{filename}.txt"
+    path = "priv/example/#{filename}_success.txt"
     string = inspect(data)
 
     File.write!(path, string)
   end
 
-  def save(result, _) do
-    IO.inspect(result)
-    result
+  def save({:error, data}, filename) do
+    path = "priv/example/#{filename}_error.txt"
+    string = inspect(data)
+
+    File.write!(path, string)
   end
 
   def get_all_market() do
@@ -146,6 +148,6 @@ defmodule ExCcxt.Helper do
     ]
 
     all_exchanges
-    |> Enum.each(fn x -> ExCcxt.fetch_currencies(x) |> save("currencies_#{x}") end)
+    |> Enum.each(fn x -> ExCcxt.fetch_currencies(x) |> save("market_#{x}") end)
   end
 end

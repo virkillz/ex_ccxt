@@ -396,23 +396,29 @@ defmodule ExCcxt do
   """
   @spec fetch_currencies(String.t()) :: {:ok, map()} | {:error, term}
   def fetch_currencies(exchange) do
-    with {:ok, currencies} <- call_js_main(:fetchCurrencies, [exchange]) do
-      currencies =
-        currencies
-        |> Enum.map(fn {k, v} ->
-          currency =
-            v
-            |> MapKeys.to_snake_case()
-            |> MapKeys.to_atoms_unsafe!()
-            |> then(&struct(Currency, &1))
+    case call_js_main(:fetchCurrencies, [exchange]) do
+      {:ok, nil} ->
+        {:error, "Return nil"}
 
-          {k, currency}
-        end)
-        |> Map.new()
+      {:ok, currencies} ->
+        # Default to empty map if nil
+        currencies =
+          currencies
+          |> Enum.map(fn {k, v} ->
+            currency =
+              v
+              |> MapKeys.to_snake_case()
+              |> MapKeys.to_atoms_unsafe!()
+              |> then(&struct(Currency, &1))
 
-      {:ok, currencies}
-    else
-      err_tup -> err_tup
+            {k, currency}
+          end)
+          |> Map.new()
+
+        {:ok, currencies}
+
+      err_tup ->
+        err_tup
     end
   end
 

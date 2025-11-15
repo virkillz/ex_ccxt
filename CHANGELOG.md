@@ -1,22 +1,32 @@
 # Changelog
 
-## [Unreleased]
+## [0.1.0]
+
+### Fixed
+
+- There are issue in fetch_market and fetch_currencies if some field is missing, it will raise error. Currently fixed.
+
+## [0.0.1]
 
 ### Added
+
 - Comprehensive @moduledoc documentation for all modules in lib/ directory
 - Complete @doc documentation for all public and private API functions
 - Detailed parameter descriptions and usage examples for all functions
 - Type specifications for improved code documentation and IDE support
 
 ### Changed
+
 - Enhanced ExCcxt.Application moduledoc with supervision tree details
 - Improved main ExCcxt moduledoc with better formatting and clarity
 
 ### Fixed
+
 - Fixed typo in main ExCcxt moduledoc ("try" → "tries")
 - Removed stray ":DSS" text from moduledoc
 
 ### Documentation
+
 - Added detailed documentation for OHLCV and candlestick data functions
 - Added comprehensive docs for options trading functions (fetch_greeks, fetch_option, etc.)
 - Added detailed docs for futures trading functions (fetch_funding_rate, fetch_settlement_history, etc.)
