@@ -1,4 +1,11 @@
 defmodule ExCcxt.Utils do
+  @moduledoc """
+  Utility functions for processing data from cryptocurrency exchanges.
+  
+  This module contains helper functions for parsing and transforming raw exchange data
+  into the structured format expected by ExCcxt. These utilities are primarily used
+  internally by the library.
+  """
   def parse_ohlcvs(raw_ohlcvs) do
     for [unix_time_ms, open, high, low, close, volume] <- raw_ohlcvs do
       %{

@@ -4,11 +4,12 @@ defmodule ExCcxt.MixProject do
   def project do
     [
       app: :ex_ccxt,
-      version: "0.0.1",
+      version: "0.1.0",
       elixir: "~> 1.19",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      package: package()
+      package: package(),
+      docs: docs()
     ]
   end
 
@@ -37,14 +38,30 @@ defmodule ExCcxt.MixProject do
       name: :ex_ccxt,
       files: ["lib", "mix.exs", "README*", "LICENSE*", "priv/js/dist"],
       description: "Use ccxt (cryptocurrency trading library) with Elixir",
-      maintainers: ["ontofractal"],
+      maintainers: ["virkillz"],
       licenses: ["MIT"],
       links: %{
-        "GitHub" => "https://github.com/metachaos-systems/ex_ccxt",
-        "Metachaos Systems" => "http://metachaos.systems",
-        "ontofractal" => "http://ontofractal.com",
+        "GitHub" => "https://github.com/virkillz/ex_ccxt",
+        "CAMP" => "https://campinvestment.com",
         "Ccxt" => "https://github.com/ccxt/ccxt"
       }
+    ]
+  end
+
+  defp docs do
+    [
+      main: "readme",
+      extras: [
+        "README.md",
+        "guides/overview.md",
+        "guides/installation.md",
+        "guides/public_api.md",
+        "guides/private_api.md",
+        "guides/disclaimer.md"
+      ],
+      groups_for_extras: [
+        Guides: ~r/guides\/.*/
+      ]
     ]
   end
 end

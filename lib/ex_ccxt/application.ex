@@ -1,5 +1,14 @@
 defmodule ExCcxt.Application do
-  @moduledoc false
+  @moduledoc """
+  Application module for ExCcxt.
+
+  This module is responsible for starting the ExCcxt application and supervising
+  the NodeJS process pool that enables communication with the CCXT JavaScript library.
+
+  The application starts a supervised NodeJS process pool with 16 workers to handle
+  concurrent JavaScript function calls for interacting with cryptocurrency exchanges.
+  """
+  
   use Application
 
   def start(_type, _args) do

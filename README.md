@@ -2,7 +2,7 @@
 
 _Because you want to connect to multiple cryptocurrency exchanges API, but still want to do it in Elixir_
 
-This is a fork of the sadly abandoned [ccxtex](https://github.com/metachaos-systems/ccxtex). It is a bridge to ccxt library, the JavaScript part. The way it works is via nodejs instance run with hex.pm nodejs package via supervisor. 
+This is a fork of the sadly abandoned [ccxtex](https://github.com/metachaos-systems/ccxtex). It is a bridge to ccxt library, the JavaScript part. The way it works is via nodejs instance run with hex.pm nodejs package via supervisor.
 
 ExCcxt is your friendly Elixir bridge to the amazing [CCXT library](https://github.com/ccxt/ccxt) - the Swiss Army knife of cryptocurrency exchange APIs. Think of it as a translator that speaks both Elixir and JavaScript, so you don't have to suffer through `npm install` nightmares.
 
@@ -12,33 +12,33 @@ With ExCcxt, you can query market data, fetch tickers, and do all sorts of crypt
 
 ExCcxt supports **130+ cryptocurrency exchanges** through the CCXT library. Here's the complete list:
 
-| Exchange | Exchange | Exchange | Exchange | Exchange |
-|----------|----------|----------|----------|----------|
-| aax | alpaca | ascendex | bequant | bibox |
-| bigone | binance | binancecoinm | binanceus | binanceusdm |
-| bit2c | bitbank | bitbay | bitbns | bitcoincom |
-| bitfinex | bitfinex2 | bitflyer | bitforex | bitget |
-| bithumb | bitmart | bitmex | bitopro | bitpanda |
-| bitrue | bitso | bitstamp | bitstamp1 | bittrex |
-| bitvavo | bkex | bl3p | blockchaincom | btcalpha |
-| btcbox | btcex | btcmarkets | btctradeua | btcturk |
-| buda | bw | bybit | bytetrade | cex |
-| coinbase | coinbaseprime | coinbasepro | coincheck | coinex |
-| coinfalcon | coinmate | coinone | coinspot | crex24 |
-| cryptocom | currencycom | delta | deribit | digifinex |
-| eqonex | exmo | flowbtc | fmfwio | ftx |
-| ftxus | gate | gateio | gemini | hitbtc |
-| hitbtc3 | hollaex | huobi | huobijp | huobipro |
-| idex | independentreserve | indodax | itbit | kraken |
-| kucoin | kucoinfutures | kuna | latoken | lbank |
-| lbank2 | liquid | luno | lykke | mercado |
-| mexc | mexc3 | ndax | novadax | oceanex |
-| okcoin | okex | okex5 | okx | paymium |
-| phemex | poloniex | probit | qtrade | ripio |
-| stex | therock | tidebit | tidex | timex |
-| tokocrypto | upbit | wavesexchange | wazirx | whitebit |
-| woo | yobit | zaif | zb | zipmex |
-| zonda | | | | |
+| Exchange   | Exchange           | Exchange      | Exchange      | Exchange    |
+| ---------- | ------------------ | ------------- | ------------- | ----------- |
+| aax        | alpaca             | ascendex      | bequant       | bibox       |
+| bigone     | binance            | binancecoinm  | binanceus     | binanceusdm |
+| bit2c      | bitbank            | bitbay        | bitbns        | bitcoincom  |
+| bitfinex   | bitfinex2          | bitflyer      | bitforex      | bitget      |
+| bithumb    | bitmart            | bitmex        | bitopro       | bitpanda    |
+| bitrue     | bitso              | bitstamp      | bitstamp1     | bittrex     |
+| bitvavo    | bkex               | bl3p          | blockchaincom | btcalpha    |
+| btcbox     | btcex              | btcmarkets    | btctradeua    | btcturk     |
+| buda       | bw                 | bybit         | bytetrade     | cex         |
+| coinbase   | coinbaseprime      | coinbasepro   | coincheck     | coinex      |
+| coinfalcon | coinmate           | coinone       | coinspot      | crex24      |
+| cryptocom  | currencycom        | delta         | deribit       | digifinex   |
+| eqonex     | exmo               | flowbtc       | fmfwio        | ftx         |
+| ftxus      | gate               | gateio        | gemini        | hitbtc      |
+| hitbtc3    | hollaex            | huobi         | huobijp       | huobipro    |
+| idex       | independentreserve | indodax       | itbit         | kraken      |
+| kucoin     | kucoinfutures      | kuna          | latoken       | lbank       |
+| lbank2     | liquid             | luno          | lykke         | mercado     |
+| mexc       | mexc3              | ndax          | novadax       | oceanex     |
+| okcoin     | okex               | okex5         | okx           | paymium     |
+| phemex     | poloniex           | probit        | qtrade        | ripio       |
+| stex       | therock            | tidebit       | tidex         | timex       |
+| tokocrypto | upbit              | wavesexchange | wazirx        | whitebit    |
+| woo        | yobit              | zaif          | zb            | zipmex      |
+| zonda      |                    |               |               |             |
 
 _All exchanges support public APIs. Private API support depends on the exchange's authentication requirements._
 
@@ -49,12 +49,10 @@ _All exchanges support public APIs. Private API support depends on the exchange'
 ```elixir
 def deps do
   [
-    {:ex_ccxt, github: "virkillz/ex_ccxt", tag: "v0.1.0"}
+    {:ex_ccxt, "~> 0.1.0"}
   ]
 end
 ```
-
-We might publish it into hex.pm soon for convenience. 
 
 ### Step 2: Make sure you have Node.js
 
@@ -208,7 +206,7 @@ From here after obtain your API Key and API Secret, you can create credential da
 
 ```
 
-Now you can use it to call any private API. CCXT already handling the authentication logic for you. 
+Now you can use it to call any private API. CCXT already handling the authentication logic for you.
 
 Example:
 
@@ -271,7 +269,7 @@ We've implemented the full CCXT unified API! Here's what you can do:
 
 ## Current Status 🚀
 
-This library is **NOT production-ready**. Due to the nature of exchanges change their API any time, new product appear, old product terminated, exchanges closing down, and the fact this also depends on CCXT library catching up, this library may never be stable. Use at your own risk. 
+This library is **NOT production-ready**. Due to the nature of exchanges change their API any time, new product appear, old product terminated, exchanges closing down, and the fact this also depends on CCXT library catching up, this library may never be stable. Use at your own risk.
 
 ### ✅ What's Solid
 
@@ -299,7 +297,7 @@ This library is **NOT production-ready**. Due to the nature of exchanges change 
 
 ## Contributing 🤝
 
-Found a bug? Want to add a feature? PRs welcome! This library is a work in progress and we're always looking for help. Or do you think we should totally implement the full CCXT in Elixir instead of wrapping the JavaScript library? Yeah somebody need to do that. Not me for now though. 
+Found a bug? Want to add a feature? PRs welcome! This library is a work in progress and we're always looking for help. Or do you think we should totally implement the full CCXT in Elixir instead of wrapping the JavaScript library? Yeah somebody need to do that. Not me for now though.
 
 ## Disclaimer ⚠️
 
