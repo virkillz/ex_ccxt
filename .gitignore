@@ -26,3 +26,6 @@ ex_ccxt-*.tar
 
 /js/source/node_modules/
 /priv/js/dist/
+
+
+/priv/example/

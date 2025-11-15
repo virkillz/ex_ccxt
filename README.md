@@ -1,8 +1,8 @@
 # ExCcxt 🚀
 
-_Because who has time to write JavaScript when you could be writing Elixir?_
+_Because you want to connect to multiple cryptocurrency exchanges API, but still want to do it in Elixir_
 
-This is a lovingly maintained fork of the sadly abandoned [ccxtex](https://github.com/metachaos-systems/ccxtex). We've dusted it off, given it some TLC, and made it work with the modern world of crypto trading.
+This is a fork of the sadly abandoned [ccxtex](https://github.com/metachaos-systems/ccxtex). It is a bridge to ccxt library, the JavaScript part. The way it works is via nodejs instance run with hex.pm nodejs package via supervisor. 
 
 ExCcxt is your friendly Elixir bridge to the amazing [CCXT library](https://github.com/ccxt/ccxt) - the Swiss Army knife of cryptocurrency exchange APIs. Think of it as a translator that speaks both Elixir and JavaScript, so you don't have to suffer through `npm install` nightmares.
 
@@ -49,10 +49,12 @@ _All exchanges support public APIs. Private API support depends on the exchange'
 ```elixir
 def deps do
   [
-    {:ex_ccxt, "~> 0.1.0"}
+    {:ex_ccxt, github: "virkillz/ex_ccxt", tag: "v0.1.0"}
   ]
 end
 ```
+
+We might publish it into hex.pm soon for convenience. 
 
 ### Step 2: Make sure you have Node.js
 
@@ -158,7 +160,7 @@ iex> ExCcxt.fetch_markets("coinbase")
 
 Authentication :
 
-To call Private API, depends on your Exchange, it might require differen type of authentication. The most common one is API Key and API Secret. To check what type of authentication your exchange requires, you can use `ExCcxt.required_credentials/1`.
+To call Private API, depends on your Exchange, it might require different type of authentication. The most common one is API Key and API Secret. To check what type of authentication your exchange requires, you can use `ExCcxt.required_credentials/1`.
 
 Example:
 
@@ -206,7 +208,7 @@ From here after obtain your API Key and API Secret, you can create credential da
 
 ```
 
-From here, everytime you need to call private API, you can pass the credential data to the function.
+Now you can use it to call any private API. CCXT already handling the authentication logic for you. 
 
 Example:
 
@@ -269,7 +271,7 @@ We've implemented the full CCXT unified API! Here's what you can do:
 
 ## Current Status 🚀
 
-This library is now **production-ready** for most trading use cases! Here's where we stand:
+This library is **NOT production-ready**. Due to the nature of exchanges change their API any time, new product appear, old product terminated, exchanges closing down, and the fact this also depends on CCXT library catching up, this library may never be stable. Use at your own risk. 
 
 ### ✅ What's Solid
 
@@ -287,7 +289,7 @@ This library is now **production-ready** for most trading use cases! Here's wher
 - WebSocket support for real-time data
 - More examples and tutorials
 - Performance optimizations
-- Comprehensive documentation
+- Better documentation
 
 ### 💡 What's Not Here (Yet)
 
@@ -297,7 +299,7 @@ This library is now **production-ready** for most trading use cases! Here's wher
 
 ## Contributing 🤝
 
-Found a bug? Want to add a feature? PRs welcome! This library is a work in progress and we're always looking for help. Or do you think we should totally implement the full CCXT in Elixir instead of wrapping the JavaScript library?
+Found a bug? Want to add a feature? PRs welcome! This library is a work in progress and we're always looking for help. Or do you think we should totally implement the full CCXT in Elixir instead of wrapping the JavaScript library? Yeah somebody need to do that. Not me for now though. 
 
 ## Disclaimer ⚠️
 

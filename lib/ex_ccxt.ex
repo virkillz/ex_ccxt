@@ -454,6 +454,54 @@ defmodule ExCcxt do
 
   @doc """
   Fetch L2 (price-aggregated) order book for a particular symbol.
+
+  Example:
+  ```elixir
+  iex> ExCcxt.fetch_l2_order_book("binance", "BTC/USDT")
+  {:ok,
+  %ExCcxt.OrderBook{
+   nonce: nil,
+   datetime: nil,
+   timestamp: nil,
+   symbol: "BTC/USDT",
+   bids: [
+     [99417.13, 0.00619],
+     [99415.58, 0.02367],
+     [99410.61, 0.11293],
+     [99405.71, 0.0676],
+     [99405.65, 0.25248],
+     [99405.63, 0.03151],
+     [99400.79, 0.26741],
+     [99400.67, 0.50107],
+     [99398.21, 0.33522],
+     [99397.75, 0.14666],
+     [99397.23, 1.34068],
+     [99395.77, 0.07108],
+     [99374.95, 0.13494],
+     [99360.79, 1.60834],
+     [99348.07, 0.39802],
+     [99348.04, 0.54288],
+     [99343.14, 0.2372],
+     [99343.07, 0.92248],
+     [99338.1, 0.40459],
+     [99333.34, 0.66522],
+     [99329.09, 1.03216],
+     [99328.45, 0.60465],
+     [99328.37, 0.87363],
+     [99323.16, 1.29009],
+     [99314.84, 0.05501],
+     [99309.76, 2.37415],
+     [99296.5, 1.72206],
+     [99254.78, 3.27986],
+     [99251.68, 2.72735],
+     [99204.84, 5.00355],
+     [99105.4, 9.96622],
+     ...
+   ],
+   ...
+  }}
+  ```
+
   """
   @spec fetch_l2_order_book(String.t(), String.t(), integer() | nil, map()) ::
           {:ok, OrderBook.t()} | {:error, term}
@@ -473,6 +521,10 @@ defmodule ExCcxt do
 
   @doc """
   Fetch recent trades for a particular trading symbol.
+
+
+  TODO: FIX it says fetchTrades is not a constructor
+
   """
   @spec fetch_trades(String.t(), String.t(), String.t(), integer() | nil) ::
           {:ok, list()} | {:error, term}
@@ -603,6 +655,7 @@ defmodule ExCcxt do
     end
   end
 
+  # TODO: Fix this, it says it's not a function
   def fetch_funding_rate_interval(exchange, symbol, params \\ %{}) do
     with {:ok, interval} <- call_js_main(:fetchFundingRateInterval, [exchange, symbol, params]) do
       {:ok, interval}
@@ -611,6 +664,7 @@ defmodule ExCcxt do
     end
   end
 
+  # TODO: Fix this, it says it's not a function
   def fetch_funding_rate_intervals(exchange, symbols, params \\ %{}) do
     with {:ok, intervals} <- call_js_main(:fetchFundingRateIntervals, [exchange, symbols, params]) do
       {:ok, intervals}
@@ -619,6 +673,7 @@ defmodule ExCcxt do
     end
   end
 
+  # TODO: Fix this, it says it's not a function
   def fetch_long_short_ratio(exchange, symbol, params \\ %{}) do
     with {:ok, ratio} <- call_js_main(:fetchLongShortRatio, [exchange, symbol, params]) do
       {:ok, ratio}
@@ -627,33 +682,33 @@ defmodule ExCcxt do
     end
   end
 
+  @doc """
+  Get credentials requirement to access the private API. Most common are 'apiKey' and 'secret'.
+  To get apiKey and secret, check your exchanges setting page.
+
+  Example:
+  ```elixir
+  iex> ExCcxt.required_credentials("binance")
+
+  {:ok,
+  %{
+   "apiKey" => true,
+   "login" => false,
+   "password" => false,
+   "privateKey" => false,
+   "secret" => true,
+   "token" => false,
+   "twofa" => false,
+   "uid" => false,
+   "walletAddress" => false
+  }}
+  ```
+  """
+
+  @spec required_credentials(String.t()) :: {:ok, map()} | {:error, term}
   def required_credentials(exchange) do
     with {:ok, credentials} <- call_js_main(:requiredCredentials, [exchange]) do
       {:ok, credentials}
-    else
-      err_tup -> err_tup
-    end
-  end
-
-  def fetch_time(exchange) do
-    with {:ok, time} <- call_js_main(:fetchTime, [exchange]) do
-      {:ok, time}
-    else
-      err_tup -> err_tup
-    end
-  end
-
-  def fetch_version(exchange) do
-    with {:ok, version} <- call_js_main(:fetchVersion, [exchange]) do
-      {:ok, version}
-    else
-      err_tup -> err_tup
-    end
-  end
-
-  def fetch_exchange(exchange) do
-    with {:ok, exchange} <- call_js_main(:fetchExchange, [exchange]) do
-      {:ok, exchange}
     else
       err_tup -> err_tup
     end
@@ -697,7 +752,13 @@ defmodule ExCcxt do
     end
   end
 
-  def create_limit_buy_order(credential = %ExCcxt.Credential{}, symbol, amount, price, params \\ %{}) do
+  def create_limit_buy_order(
+        credential = %ExCcxt.Credential{},
+        symbol,
+        amount,
+        price,
+        params \\ %{}
+      ) do
     with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
          {:ok, order} <-
            call_js_main(:createLimitBuyOrder, [exchange, cred, symbol, amount, price, params]) do
@@ -707,7 +768,13 @@ defmodule ExCcxt do
     end
   end
 
-  def create_limit_sell_order(credential = %ExCcxt.Credential{}, symbol, amount, price, params \\ %{}) do
+  def create_limit_sell_order(
+        credential = %ExCcxt.Credential{},
+        symbol,
+        amount,
+        price,
+        params \\ %{}
+      ) do
     with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
          {:ok, order} <-
            call_js_main(:createLimitSellOrder, [exchange, cred, symbol, amount, price, params]) do
@@ -719,7 +786,8 @@ defmodule ExCcxt do
 
   def create_market_buy_order(credential = %ExCcxt.Credential{}, symbol, amount, params \\ %{}) do
     with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
-         {:ok, order} <- call_js_main(:createMarketBuyOrder, [exchange, cred, symbol, amount, params]) do
+         {:ok, order} <-
+           call_js_main(:createMarketBuyOrder, [exchange, cred, symbol, amount, params]) do
       {:ok, order}
     else
       err_tup -> err_tup
@@ -728,7 +796,8 @@ defmodule ExCcxt do
 
   def create_market_sell_order(credential = %ExCcxt.Credential{}, symbol, amount, params \\ %{}) do
     with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
-         {:ok, order} <- call_js_main(:createMarketSellOrder, [exchange, cred, symbol, amount, params]) do
+         {:ok, order} <-
+           call_js_main(:createMarketSellOrder, [exchange, cred, symbol, amount, params]) do
       {:ok, order}
     else
       err_tup -> err_tup
@@ -753,25 +822,45 @@ defmodule ExCcxt do
     end
   end
 
-  def fetch_orders(credential = %ExCcxt.Credential{}, symbol \\ nil, since \\ nil, limit \\ nil, params \\ %{}) do
+  def fetch_orders(
+        credential = %ExCcxt.Credential{},
+        symbol \\ nil,
+        since \\ nil,
+        limit \\ nil,
+        params \\ %{}
+      ) do
     with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
-         {:ok, orders} <- call_js_main(:fetchOrders, [exchange, cred, symbol, since, limit, params]) do
+         {:ok, orders} <-
+           call_js_main(:fetchOrders, [exchange, cred, symbol, since, limit, params]) do
       {:ok, orders}
     else
       err_tup -> err_tup
     end
   end
 
-  def fetch_open_orders(credential = %ExCcxt.Credential{}, symbol \\ nil, since \\ nil, limit \\ nil, params \\ %{}) do
+  def fetch_open_orders(
+        credential = %ExCcxt.Credential{},
+        symbol \\ nil,
+        since \\ nil,
+        limit \\ nil,
+        params \\ %{}
+      ) do
     with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
-         {:ok, orders} <- call_js_main(:fetchOpenOrders, [exchange, cred, symbol, since, limit, params]) do
+         {:ok, orders} <-
+           call_js_main(:fetchOpenOrders, [exchange, cred, symbol, since, limit, params]) do
       {:ok, orders}
     else
       err_tup -> err_tup
     end
   end
 
-  def fetch_canceled_orders(credential = %ExCcxt.Credential{}, symbol \\ nil, since \\ nil, limit \\ nil, params \\ %{}) do
+  def fetch_canceled_orders(
+        credential = %ExCcxt.Credential{},
+        symbol \\ nil,
+        since \\ nil,
+        limit \\ nil,
+        params \\ %{}
+      ) do
     with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
          {:ok, orders} <-
            call_js_main(:fetchCanceledOrders, [exchange, cred, symbol, since, limit, params]) do
@@ -781,7 +870,13 @@ defmodule ExCcxt do
     end
   end
 
-  def fetch_closed_orders(credential = %ExCcxt.Credential{}, symbol \\ nil, since \\ nil, limit \\ nil, params \\ %{}) do
+  def fetch_closed_orders(
+        credential = %ExCcxt.Credential{},
+        symbol \\ nil,
+        since \\ nil,
+        limit \\ nil,
+        params \\ %{}
+      ) do
     with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
          {:ok, orders} <-
            call_js_main(:fetchClosedOrders, [exchange, cred, symbol, since, limit, params]) do
@@ -791,16 +886,29 @@ defmodule ExCcxt do
     end
   end
 
-  def fetch_my_trades(credential = %ExCcxt.Credential{}, symbol \\ nil, since \\ nil, limit \\ nil, params \\ %{}) do
+  def fetch_my_trades(
+        credential = %ExCcxt.Credential{},
+        symbol \\ nil,
+        since \\ nil,
+        limit \\ nil,
+        params \\ %{}
+      ) do
     with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
-         {:ok, trades} <- call_js_main(:fetchMyTrades, [exchange, cred, symbol, since, limit, params]) do
+         {:ok, trades} <-
+           call_js_main(:fetchMyTrades, [exchange, cred, symbol, since, limit, params]) do
       {:ok, trades}
     else
       err_tup -> err_tup
     end
   end
 
-  def fetch_my_liquidations(credential = %ExCcxt.Credential{}, symbol \\ nil, since \\ nil, limit \\ nil, params \\ %{}) do
+  def fetch_my_liquidations(
+        credential = %ExCcxt.Credential{},
+        symbol \\ nil,
+        since \\ nil,
+        limit \\ nil,
+        params \\ %{}
+      ) do
     with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
          {:ok, liquidations} <-
            call_js_main(:fetchMyLiquidations, [exchange, cred, symbol, since, limit, params]) do
@@ -846,10 +954,25 @@ defmodule ExCcxt do
     end
   end
 
-  def create_convert_trade(credential = %ExCcxt.Credential{}, id, from_code, to_code, amount, params \\ %{}) do
+  def create_convert_trade(
+        credential = %ExCcxt.Credential{},
+        id,
+        from_code,
+        to_code,
+        amount,
+        params \\ %{}
+      ) do
     with %{exchange: exchange, cred: cred} <- shorten_credential(credential),
          {:ok, trade} <-
-           call_js_main(:createConvertTrade, [exchange, cred, id, from_code, to_code, amount, params]) do
+           call_js_main(:createConvertTrade, [
+             exchange,
+             cred,
+             id,
+             from_code,
+             to_code,
+             amount,
+             params
+           ]) do
       {:ok, trade}
     else
       err_tup -> err_tup
