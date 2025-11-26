@@ -27,7 +27,7 @@ Add ExCcxt to your `mix.exs` file:
 ```elixir
 def deps do
   [
-    {:ex_ccxt, "~> 0.1.0"}
+    {:ex_ccxt, "~> 0.1.1"}
   ]
 end
 ```
@@ -51,6 +51,7 @@ mix deps.compile ex_ccxt
 ```
 
 This will automatically:
+
 - Download the CCXT JavaScript library
 - Bundle the JavaScript code
 - Place the bundled files in the correct location
@@ -109,6 +110,7 @@ You should see a list of supported exchanges like:
 ### Common Issues
 
 #### Node.js not found
+
 If you get an error about Node.js not being found:
 
 1. Ensure Node.js is installed and in your PATH
@@ -116,6 +118,7 @@ If you get an error about Node.js not being found:
 3. Try running `node --version` to verify installation
 
 #### JavaScript compilation errors
+
 If you encounter errors during JavaScript compilation:
 
 1. Ensure npm/yarn is installed
@@ -131,6 +134,7 @@ If you encounter errors during JavaScript compilation:
    ```
 
 #### Port/Process errors
+
 If you see errors related to ports or processes:
 
 1. Check that the configured pool size isn't too large for your system

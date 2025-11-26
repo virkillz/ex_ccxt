@@ -49,7 +49,7 @@ _All exchanges support public APIs. Private API support depends on the exchange'
 ```elixir
 def deps do
   [
-    {:ex_ccxt, "~> 0.1.0"}
+    {:ex_ccxt, "~> 0.1.1"}
   ]
 end
 ```
