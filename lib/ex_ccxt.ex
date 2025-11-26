@@ -97,13 +97,11 @@ defmodule ExCcxt do
     }
 
     with {:ok, ticker} <- call_js_main(:fetchTicker, [opts]) do
-      to_struct = &struct!(Ticker, &1)
-
       ticker =
         ticker
         |> MapKeys.to_snake_case()
         |> MapKeys.to_atoms_unsafe!()
-        |> to_struct.()
+        |> then(&struct(Ticker, &1))
 
       {:ok, ticker}
     else
@@ -276,8 +274,6 @@ defmodule ExCcxt do
   @spec fetch_tickers(String.t(), map) :: {:ok, map()} | {:error, term}
   def fetch_tickers(exchange, _params \\ %{}) do
     with {:ok, tickers} <- call_js_main(:fetchTickersAll, [exchange]) do
-      to_struct = &struct!(Ticker, &1)
-
       tickers =
         tickers
         |> Enum.map(fn {k, v} ->
@@ -285,7 +281,7 @@ defmodule ExCcxt do
             v
             |> MapKeys.to_snake_case()
             |> MapKeys.to_atoms_unsafe!()
-            |> to_struct.()
+            |> then(&struct(Ticker, &1))
 
           {k, value}
         end)
