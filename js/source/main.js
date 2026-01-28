@@ -1,5 +1,20 @@
 const ccxt = require("ccxt")
 
+
+// ----------- GENERIC ----------- //
+
+async function call(exchange, property, ...params) {
+  const _exchange = new ccxt[exchange]()
+  const value = _exchange[property]
+  
+  if (typeof value === 'function') {
+    return await value.call(_exchange, ...params)
+  }
+  return value
+}
+
+
+
 // -------------- PUBLIC ----------------- //
 
 async function fetchStatus(exchange, params = {}) {
@@ -257,6 +272,7 @@ async function createConvertTrade(exchange, cred, id, fromCode, toCode, amount, 
 // -------------- EXPORT ----------------- //
 
 module.exports = {
+  call,
   // Public API functions
   fetchTrades,
   exchanges,

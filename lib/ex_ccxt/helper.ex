@@ -64,6 +64,43 @@ defmodule ExCcxt.Helper do
     "gate"
   ]
 
+  @exchange_list_tickers [
+    "hollaex",
+    "hitbtc",
+    "novadax",
+    "hitbtc3",
+    "bequant",
+    "blockchaincom",
+    "bitopro",
+    "btcturk",
+    "bitcoincom",
+    "binance",
+    "exmo",
+    "luno",
+    "probit",
+    "ascendex",
+    "bitfinex",
+    "latoken",
+    "wazirx",
+    "fmfwio",
+    "lbank2",
+    "timex",
+    "bithumb",
+    "bitget",
+    "binancecoinm",
+    "binanceusdm",
+    "huobi",
+    "bitrue",
+    "bitvavo",
+    "okx",
+    "digifinex",
+    "huobipro",
+    "kucoinfutures",
+    "coinbaseprime",
+    "kucoin",
+    "gate"
+  ]
+
   def save({:ok, data}, filename) do
     path = "priv/example/#{filename}_success.txt"
     string = inspect(data)
@@ -83,18 +120,10 @@ defmodule ExCcxt.Helper do
     |> Enum.each(fn x -> ExCcxt.fetch_ticker(x, "BTC", "USDT") |> save("tickers_#{x}") end)
   end
 
-  def test_olhcvs() do
-    @exchange_list
+  def test_tickers() do
+    @exchange_list_tickers
     |> Enum.each(fn x ->
-      opts = %ExCcxt.OhlcvOpts{
-        exchange: x,
-        base: "BTC",
-        quote: "USDT",
-        timeframe: "1h",
-        limit: 100
-      }
-
-      ExCcxt.fetch_ohlcvs(opts) |> save("ohlcvs_#{x}")
+      ExCcxt.required_credentials(x) |> save("credentials_#{x}")
     end)
   end
 end

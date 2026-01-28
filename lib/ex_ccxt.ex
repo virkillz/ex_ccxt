@@ -15,6 +15,67 @@ defmodule ExCcxt do
 
   """
 
+  # =============== GENERIC =========================
+
+  @doc """
+  Generic function to execute any ccxt function.
+
+  Example:
+
+  ```elixir
+  ExCcxt.call(%{
+    exchange: "hitbtc",
+    property: "fetchTicker",
+    symbol: "BTC/USDT"
+  })
+  ```
+
+  Return:
+
+  ```elixir
+  {:ok,
+  %ExCcxt.Ticker{
+   timestamp: 1763033564893,
+   datetime: "2025-11-13T11:32:44.893Z",
+   vwap: 102835.09937889625,
+   symbol: "BTC/USDT",
+   quote_volume: 96485861.8715014,
+   base_volume: 938.25807,
+   percentage: -1.8591945763136015,
+   change: -1949.47,
+   average: 103880.885,
+   last: 102906.15,
+   low: 100842.93,
+   high: 105331.15,
+   close: 102906.15,
+   open: 104855.62,
+   bid: 102869,
+   ask: 102916.64,
+   info: %{
+     high: "105331.15",
+     low: "100842.93",
+     open: "104855.62",
+     timestamp: "2025-11-13T11:32:44.893Z",
+     last: "102906.15",
+     symbol: "BTCUSD",
+     ask: "102916.64",
+     bid: "102869.00",
+     volume: "938.25807",
+     volume_quote: "96485861.8715014"
+   }
+  }}
+  ```
+
+  """
+  @spec call(map()) :: {:ok, term} | {:error, term}
+  def call(opts) do
+    with {:ok, value} <- call_js_main(:call, opts) do
+      {:ok, value}
+    else
+      err_tup -> err_tup
+    end
+  end
+
   # =============== PUBLIC =========================
 
   @doc """
